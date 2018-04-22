@@ -1,3 +1,3 @@
 ../etc/passwd
 ../../../../../etc/passwd
-../../../../../t../etc/passwd
+../../../../../../etc/passwd
