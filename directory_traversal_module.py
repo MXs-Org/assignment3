@@ -9,6 +9,11 @@ def run(link, soup):
 
   print(contains_passwd(response))
 
+def get_request(link, soup):
+
+
+def post_request(link, soup):
+
 def contains_passwd(response):
   """Checks if reponse constains /etc/passwd contents
 
@@ -33,6 +38,7 @@ def contains_passwd(response):
 
   # TODO: in case response contains JSON use reponses.json()
   # TODO: check if necessary - maybe using .text is sufficient
+  # tested with nusmods api - probably no need to use reponses.json() 
 
   return False
 
@@ -41,5 +47,5 @@ if __name__ == '__main__':
 
   if len(sys.argv) != 2:
     print("input link pls")
-
-  run(sys.argv[1], None)
+  else:
+    run(sys.argv[1], None)
