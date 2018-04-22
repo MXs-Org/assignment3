@@ -11,10 +11,13 @@ import scanner
 
 # Modify this
 # TODO: maybe change this to be a command line argument?
-target_url = "http://google.com"
+# Note: DON'T end with a TRAILING '/'
+target_url = "http://localhost:8888"
 
-# Set of all visited links
-all_links = set()
+def pass_to_scanner(link, soup):
+	# Final implementation is to pass URL to scanner once a link is found. 
+	# For now, just print.
+	scanner.scan(link, soup)
 
 def create_full_link(href, url):
 	# Checks if href is a relative or absolute URL. 
@@ -26,33 +29,27 @@ def create_full_link(href, url):
 	elif href[0] == '.':
 		# Weird relative link, need to remove period
 		return url + href[1:]
+	elif not (href.startswith("http://") or href.startswith("https://")):
+		# Relative link
+		return url + "/" + href
 	else:
 		# href starts with the proper protocol i.e. http or https
 		return href
 
-def pass_to_scanner(link, soup):
-	# Final implementation is to pass URL to scanner once a link is found. 
-	# For now, just print.
-	scanner.scan(link, soup)
-
-def crawler(url):
-	# Input: string URL (host to crawl)
-	# Output: string URL (links found)
-	if url in all_links: 
-		return
-
-	# DFS recursive crawl
-	page = requests.get(url)
-	soup = BeautifulSoup(page.content, 'html.parser')
-	for a_element in soup.find_all('a', href=True):
-		link = create_full_link(a_element['href'], url)
-		if (link.startswith("http://") or link.startswith("https://")) and link not in all_links:
-			all_links.add(link)
-		 	pass_to_scanner(link, soup)
-			try:
-				crawler(link)
-			except Exception:
-				pass
+def crawler(init_url):
+	# FILO queue
+	all_links = [init_url,]
+	while all_links:
+		url = all_links.pop()
+		page = requests.get(url)
+		soup = BeautifulSoup(page.content, 'html.parser')
+		# Scan the current URL for vulnerabilities
+		pass_to_scanner(url, soup)
+		# Find more links from the current URL
+		for a_element in soup.find_all('a', href=True):
+			link = create_full_link(a_element['href'], url)		
+			if link not in all_links:
+		 		all_links.append(link)
 
 if __name__ == "__main__":
 	crawler(target_url)
