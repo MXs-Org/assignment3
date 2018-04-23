@@ -55,7 +55,7 @@ def generate_exploits(dirname, vul_dict):
        dirname - dirname of directory to contain the generated files
        vul_dict - the python dict with structure like the json for each vul class
   """
-  vul_class = vul_dict['class']
+  vul_class = ''.join(vul_dict['class'].split())
   vul_endpt_payload_pairs = vul_dict['results'][BASE_URL]
 
   for pair_idx in range(len(vul_endpt_payload_pairs)):
@@ -98,7 +98,7 @@ def generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params)
 def generate_exploit_sh(dirname, exploit_filename):
   sh_filename = dirname + '/' + exploit_filename + '.sh'
   with open(sh_filename, 'w+') as sh_file:
-    sh_file.write('python "{}.py"\n'.format(exploit_filename))
+    sh_file.write('python {}.py\n'.format(exploit_filename))
 
   # chmod +x the file
   st = os.stat(sh_filename)
