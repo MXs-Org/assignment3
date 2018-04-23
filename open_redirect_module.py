@@ -14,7 +14,7 @@ def run(link, soup):
   # else if link is post request
   # send_post_request(link, None, payloads)
 
-def get_payload_list(filename='open_redirect_payloads.txt'):
+def get_payload_list(filename='payloads/open_redirect_payloads.txt'):
   """Returns payloads in payload file as a list"""
   with open(filename) as f:
     payloads = f.read().splitlines()
