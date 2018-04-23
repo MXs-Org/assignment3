@@ -11,6 +11,17 @@ Things to do:
 4. Send network requests GET, POST
 """
 
+def html_escape(text):
+    """Produce entities within text."""
+    html_escape_table = {
+      "&": "&amp;",
+      '"': "&quot;",
+      "'": "&apos;",
+      ">": "&gt;",
+      "<": "&lt;",
+    }
+    return "".join(html_escape_table.get(c,c) for c in text)
+
 def extract_post_fields(link, soup):
   # Finds all possible SQL injection points present on the page
   # Returns { post_url: [list of fields] }
@@ -37,6 +48,10 @@ def find_baseline(injection_obj):
   # Follow a simple flowchart to see if a baseline file can be determined
   # Returns the baseline_file. "" if baseline does not exist
 
+  method, link, params, cookie = injection_obj
+  if link == "http://192.168.56.101/sqli/example5.php":
+    import pdb; pdb.set_trace()
+
   # Send a request with long garbage string (lower the chances that the page 
   # originally contains our POST data)
   res1 = make_request(injection_obj, 'b1946ac92492d2347c6235b4d2611184').content
@@ -53,7 +68,12 @@ def find_baseline(injection_obj):
 
 def inject_payload(injection_obj, payload, baseline):
   # import pdb; pdb.set_trace()
+  method, link, params, cookie = injection_obj
+  # if link == 'http://localhost:8888/openredirect/openredirect.php':
+  #   import pdb; pdb.set_trace()
   res = make_request(injection_obj, payload)
+  if payload == "'-'\n" and link == "http://192.168.56.101/sqli/example5.php":
+    import pdb; pdb.set_trace()
   if baseline:
     if res.content != baseline:
       print("[*] Working payload found!")
@@ -62,8 +82,12 @@ def inject_payload(injection_obj, payload, baseline):
   else:
     # TODO: this might be a fragile assumption!
     # Making the assumption that if the injection worked, the <input> will NOT 
-    # be echoed back to the user
-    if payload not in res.content:
+    # be echoed back to the user. 
+    # Note: payload.strip() MIGHT result in some cases not being caught?
+    # TODO: this heuristic below is experimental!
+    if html_escape(payload.strip()) in res.content or payload.strip() in res.content:
+      pass
+    else:
       print("[*] Working payload found!")
       print(injection_obj, payload)
       return make_results_obj(injection_obj, payload)
