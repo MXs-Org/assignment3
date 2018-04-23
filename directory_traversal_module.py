@@ -7,26 +7,24 @@ def run(injection_obj):
   print("Running {}\n".format(injection_obj[1]))
 
   payloads = get_payload_list()
-  inject_payloads(injection_obj, payloads)
+  return inject_payloads(injection_obj, payloads)
 
 def inject_payloads(injection_obj, payloads):
   method, link, params, cookie = injection_obj
   is_exploitable = False
 
-  # try injection each payload into each param
+  # for each param, try all payloads
   for param_idx in range(len(params)):
     for payload in payloads:
       print("Trying {} request {} with {} as param {}".format(method, link, payload, params[param_idx]))
       response = library.make_request(injection_obj, payload, param_idx)
       is_exploitable = contains_passwd(response)
       print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
-      # TODO : write results into json 
 
-      # TODO refactor this - break after finding the first successful payload
       if is_exploitable:
-          break
-    if is_exploitable:
-        break
+        return library.make_results_obj(injection_obj, payload)
+
+  return None
 
 def get_payload_list(filename='payloads/directory_traversal_payloads.txt'):
   """Returns payloads in payload file as a list"""
@@ -65,4 +63,4 @@ def contains_passwd(response):
 # TODO for testing, remove when done
 if __name__ == '__main__':
   injection_obj = ['GET','http://127.0.0.1:8888/directorytraversal/directorytraversal.php', ['ascii'], '']
-  run(injection_obj)
+  print(run(injection_obj))
