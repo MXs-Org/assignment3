@@ -25,10 +25,17 @@ def check_injection_points(soup):
   """
   return True
 
+def make_json_results(results_lst):
+  # Stub method
+  # Creates the final results JSON needed for submission
+  for result in results_lst:
+    pass
+
 def scan(link, soup):
   if check_injection_points(soup):
-    sql_injection_module.run(link, soup)
-  print(link)
+    print("[*] Testing endpoint: {}".format(link))
+    sql_results = sql_injection_module.run(link, soup)
+  return make_json_results([sql_results])
 
 def test_vuln_modules(soup):
   sql_injection_module.run(soup)
