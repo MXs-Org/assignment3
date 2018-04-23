@@ -4,3 +4,4 @@ venv/
 
 # ignore generated exploits folder
 exploits_2018-*
+json_2018-*
