@@ -69,13 +69,15 @@ def generate_exploits(dirname, vul_dict):
    method = vul_endpt_payload_pairs[pair_idx]['method']
 
    if method == "GET":
-     print("GET!")
      exploit_filename = generate_get_exploit_python(dirname, vul_class, pair_idx, endpoint, params)
    else:
      exploit_filename = generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params)
-     print("POST!")
 
    generate_exploit_sh(dirname, exploit_filename)
+
+############################
+# Helper functions
+############################
 
 def generate_get_exploit_python(dirname, vul_class, pair_idx, endpoint, params):
   """generate one python exploit for a endpoint and payload pair (GET request version)
