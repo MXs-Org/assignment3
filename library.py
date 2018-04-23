@@ -1,6 +1,8 @@
 """
 Module for shared code that does not fit in anywhere else
 """
+from __future__ import print_function
+
 import os
 import stat
 import datetime
@@ -16,7 +18,10 @@ DEBUG = True
 TARGET_URL = "http://localhost:8888"
 BASE_URL = "http://localhost:8888" if DEBUG else "http://target.com"
 
-TEMPLATE_PLACEHOLDER_GET_REQ = "<REPLACE_WITH_GET_URL>"
+TEMPLATE_PLACEHOLDER_GET_REQ_URL = "<REPLACE_WITH_GET_URL>"
+TEMPLATE_PLACEHOLDER_POST_REQ_URL = "<REPLACE_WITH_POST_URL>"
+TEMPLATE_PLACEHOLDER_POST_REQ_PARAMS = "<REPLACE_WITH_POST_PARAMS>"
+TEMPLATE_PLACEHOLDER_POST_REQ_TMP = "<REPLACE_WITH_EXPLOIT_FILENAME>"
 
 def make_request(injection_obj, payload, param_idx=0):
   method, link, params, cookie = injection_obj
@@ -73,27 +78,50 @@ def generate_exploits(dirname, vul_dict):
    generate_exploit_sh(dirname, exploit_filename)
 
 def generate_get_exploit_python(dirname, vul_class, pair_idx, endpoint, params):
-  """generate one python exploit for a endpoint and payload pair
+  """generate one python exploit for a endpoint and payload pair (GET request version)
   """
   exploit_filename = vul_class + str(pair_idx)
   exploit_filename_with_ext = exploit_filename + '.py'
   exploit_filename_with_dir = dirname + '/' + exploit_filename_with_ext
 
   # form url for exploit - note shldn't encode the url (use as is)
-  exploit_url = BASE_URL + '/'+ endpoint + '?' + "&".join("%s=%s" % (k,v) for k,v in params.items())
+  exploit_url = BASE_URL + endpoint + '?' + "&".join("%s=%s" % (k,v) for k,v in params.items())
 
   # copy and replace placeholder in template
   shutil.copy2('exploit_templates/get_req.py', exploit_filename_with_dir)
 
-  with fileinput.FileInput(exploit_filename_with_dir, inplace=True) as file:
-    for line in file:
-        print(line.replace(TEMPLATE_PLACEHOLDER_GET_REQ, exploit_url))
-
+  file = fileinput.FileInput(exploit_filename_with_dir, inplace=True)
+  for line in file:
+    print(line.replace(TEMPLATE_PLACEHOLDER_GET_REQ_URL, exploit_url), end='')
   return exploit_filename
 
 def generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params):
+  """generate one python exploit for a endpoint and payload pair (POST request version)
+  """
+  exploit_filename = vul_class + str(pair_idx)
+  exploit_filename_with_ext = exploit_filename + '.py'
+  exploit_filename_with_dir = dirname + '/' + exploit_filename_with_ext
 
-  return "DUMMY" + str(pair_idx)
+  # form url for exploit - note shldn't encode the url (use as is)
+  exploit_url = BASE_URL + endpoint
+  exploit_params = str(params)
+
+  # copy and replace placeholder in template
+  shutil.copy2('exploit_templates/post_req.py', exploit_filename_with_dir)
+
+  # replace the placeholders - might want to refactor this shit
+  file = fileinput.FileInput(exploit_filename_with_dir, inplace=True)
+  for line in file:
+    if TEMPLATE_PLACEHOLDER_POST_REQ_URL in line:
+      print(line.replace(TEMPLATE_PLACEHOLDER_POST_REQ_URL, exploit_url), end='')
+    elif TEMPLATE_PLACEHOLDER_POST_REQ_PARAMS in line:
+      print(line.replace(TEMPLATE_PLACEHOLDER_POST_REQ_PARAMS, exploit_params), end='')
+    elif TEMPLATE_PLACEHOLDER_POST_REQ_TMP in line:
+      print(line.replace(TEMPLATE_PLACEHOLDER_POST_REQ_TMP, exploit_filename), end='')
+    else:
+      print(line, end='')
+
+  return exploit_filename
 
 def generate_exploit_sh(dirname, exploit_filename):
   sh_filename = dirname + '/' + exploit_filename + '.sh'
@@ -127,9 +155,9 @@ if __name__ == '__main__':
             "method":"GET"
           },
          {
-            "endpoint":"/POST.php",
+            "endpoint":"/sqli/sqli.php",
             "params":{
-               "url":"https://POST.com"
+               "username":"' or '1'='1"
             },
             "method":"POST"
           }
