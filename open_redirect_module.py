@@ -1,7 +1,8 @@
 import sys
 import requests
-import library
 from bs4 import BeautifulSoup
+
+import library
 
 def run(injection_obj):
   print("Running {}\n".format(injection_obj[1]))
@@ -13,12 +14,12 @@ def inject_payloads(injection_obj, payloads):
   method, link, params, cookie = injection_obj
   is_exploitable = False
 
-  # for each param, try all payloads
+  # try injection each payload into each param
   for param_idx in range(len(params)):
     for payload in payloads:
       print("Trying {} request {} with {} as param {}".format(method, link, payload, params[param_idx]))
       response = library.make_request(injection_obj, payload, param_idx)
-      is_exploitable = contains_passwd(response)
+      is_exploitable = is_successful_redirect(response)
       print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
 
       if is_exploitable:
@@ -26,15 +27,15 @@ def inject_payloads(injection_obj, payloads):
 
   return None
 
-def get_payload_list(filename='payloads/directory_traversal_payloads.txt'):
+def get_payload_list(filename='payloads/open_redirect_payloads.txt'):
   """Returns payloads in payload file as a list"""
   with open(filename) as f:
     payloads = f.read().splitlines()
     return payloads
 
-def contains_passwd(response):
+def is_successful_redirect(response):
   """Checks if reponse constains /etc/passwd contents
-  Works by checking if the response contains 'root:x:0:0:'
+  Works by checking if the response contains 'GitHub System Status'
 
   Args:
     response: Requests response object
@@ -42,16 +43,13 @@ def contains_passwd(response):
   Returns:
     boolean
   """
-  # TODO: need to find out if this is the best way to check /etc/passwd got displayed\
-  #       maybe just change to ':x:0:0' because the username of root user may not always be root
-  #       but the uid and gid is guaranteed to be 0
 
-  ROOT_LINE = 'root:x:0:0:'
+  TITLE_LINE = 'GitHub System Status'
 
   if response.status_code != 200:
     return False
 
-  if ROOT_LINE in response.text:
+  if TITLE_LINE in response.text:
     return True
 
   # TODO: in case response contains JSON use reponses.json()
@@ -62,5 +60,5 @@ def contains_passwd(response):
 
 # TODO for testing, remove when done
 if __name__ == '__main__':
-  injection_obj = ['GET','http://127.0.0.1:8888/directorytraversal/directorytraversal.php', ['ascii'], '']
+  injection_obj = ['GET','http://127.0.0.1:8888/openredirect/openredirect.php', ['redirect'], '']
   print(run(injection_obj))
