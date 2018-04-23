@@ -45,10 +45,10 @@ def extract_post_fields(link, soup):
       # Extract the injectable HTML elements present in the <form>
       for child in form.find_all(recursive=False):
         params = []
-        if child['type'] in ('submit', 'image') and not child.has_attr('name'):
+        if child.get('type') in ('submit', 'image') and not child.has_attr('name'):
           # Ignore submit/image with no name attribute
           continue
-        if child['type'] in ('text', 'hidden', 'password', 'submit', 'image'):
+        if child.get('type') in ('text', 'hidden', 'password', 'submit', 'image'):
             # Extract the <input> name attribute
             params.append(child['name'])
         injection_obj = ('POST', post_url, params, COOKIE)
@@ -64,16 +64,17 @@ def extract_get_fields(link, soup):
     a_url = urlparse.urlparse(a_element['href'])
     # Extract list of params
     params = urlparse.parse_qs(a_url.query).keys()
-    # Create full link then strip off the query params
-    full_link = create_full_link(a_element['href'], link)
-    full_link = full_link[:full_link.index("?")]
-    injection_obj = ('GET', full_link, params, COOKIE)
-    if injection_obj not in GET_INJECTION_OBJECTS:
-      GET_INJECTION_OBJECTS.append(injection_obj)
-      output.append(injection_obj)
+    if params:
+      # Create full link then strip off the query params
+      full_link = create_full_link(a_element['href'], link)
+      full_link = full_link[:full_link.index("?")]
+      injection_obj = ('GET', full_link, params, COOKIE)
+      if injection_obj not in GET_INJECTION_OBJECTS:
+        GET_INJECTION_OBJECTS.append(injection_obj)
+        output.append(injection_obj)
   return output
 
-def extract_injection_points(link, soup):
+def extract_injection_points(link, soup):  
   post_urls = extract_post_fields(link, soup)
   get_urls = extract_get_fields(link, soup)
   post_urls.extend(get_urls)
