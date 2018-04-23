@@ -97,7 +97,7 @@ https:status.github.com/messages
 //google%E3%80%82com
 \/\/status.github.com/messages/
 /\/status.github.com/messages/
-//google%00.com
+//status.github%00.com/messages
 https://www.whitelisteddomain.tld/https://status.github.com/messages/
 http://0xd8.0x3a.0xd6.0xce
 http://www.whitelisteddomain.tld@0xd8.0x3a.0xd6.0xce
