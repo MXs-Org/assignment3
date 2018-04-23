@@ -8,6 +8,7 @@ import stat
 import datetime
 import shutil
 import fileinput
+import json
 
 import requests
 
@@ -46,11 +47,11 @@ def make_results_obj(injection_obj, payload):
   }
   return obj
 
-def make_exploit_dir():
-  """make a exploit dir to contain all generated exploits
-     dirname = exploits_<current time>
+def make_timestamped_dir(prefix='exploits'):
+  """make a dir with a timestamp to contain files generated at current time
+     dirname = <prefix>_<current time>
   """
-  dirname = 'exploits_' + str(datetime.datetime.now())
+  dirname = prefix + '_' + str(datetime.datetime.now())
   os.makedirs(dirname)
   return dirname
 
@@ -125,6 +126,12 @@ def generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params)
 
   return exploit_filename
 
+def generate_json(dirname, vul_dict):
+  vul_class = vul_dict['class']
+  print(vul_class)
+  with open(dirname + '/' + vul_class + '.json', 'w+') as fp:
+    json.dump(vul_dict, fp, indent=2)
+
 def generate_exploit_sh(dirname, exploit_filename):
   sh_filename = dirname + '/' + exploit_filename + '.sh'
   with open(sh_filename, 'w+') as sh_file:
@@ -166,5 +173,11 @@ if __name__ == '__main__':
       ]
     }
   }
-  dirname = make_exploit_dir()
+
+  # Test json generation
+  dirname = make_timestamped_dir('json')
+  generate_json(dirname, python_dict)
+
+  # Test exploit generation
+  dirname = make_timestamped_dir()
   generate_exploits(dirname, python_dict)
