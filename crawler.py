@@ -39,6 +39,7 @@ def create_full_link(href, url):
 def crawler(init_url):
 	# FILO queue
 	all_links = [init_url,]
+	seen_links = {init_url}
 	while all_links:
 		url = all_links.pop()
 		page = requests.get(url)
@@ -48,8 +49,10 @@ def crawler(init_url):
 		# Find more links from the current URL
 		for a_element in soup.find_all('a', href=True):
 			link = create_full_link(a_element['href'], url)		
-			if link not in all_links:
-		 		all_links.append(link)
+			if link not in seen_links:
+				seen_links.add(link)
+				if link not in all_links:
+					all_links.append(link)
 
 if __name__ == "__main__":
 	crawler(target_url)
