@@ -47,6 +47,15 @@ def make_results_obj(injection_obj, payload):
   }
   return obj
 
+def make_vul_dict(vul_class, result_list, base_url=BASE_URL):
+  vul_dict = {
+    "class": vul_class,
+    "results": {
+      base_url: result_list
+    }
+  }
+  return vul_dict
+
 def make_timestamped_dir(prefix='exploits'):
   """make a dir with a timestamp to contain files generated at current time
      dirname = <prefix>_<current time>
@@ -75,6 +84,12 @@ def generate_exploits(dirname, vul_dict):
      exploit_filename = generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params)
 
    generate_exploit_sh(dirname, exploit_filename)
+
+def generate_json(dirname, vul_dict):
+  vul_class = vul_dict['class']
+  print(vul_class)
+  with open(dirname + '/' + vul_class + '.json', 'w+') as fp:
+    json.dump(vul_dict, fp, indent=2)
 
 ############################
 # Helper functions
@@ -125,12 +140,6 @@ def generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params)
       print(line, end='')
 
   return exploit_filename
-
-def generate_json(dirname, vul_dict):
-  vul_class = vul_dict['class']
-  print(vul_class)
-  with open(dirname + '/' + vul_class + '.json', 'w+') as fp:
-    json.dump(vul_dict, fp, indent=2)
 
 def generate_exploit_sh(dirname, exploit_filename):
   sh_filename = dirname + '/' + exploit_filename + '.sh'
