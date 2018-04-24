@@ -14,8 +14,11 @@ from library import BASE_URL, TARGET_URL
 
 def pass_to_scanner(link, soup):
 	# Final implementation is to pass URL to scanner once a link is found. 
-	# For now, just print.
-	scanner.scan(link, soup)
+	# scanner.can returns a list of (vuln_class, result_obj)
+	try:
+		return scanner.scan(link, soup)
+	except:
+		return []
 
 def create_full_link(href, url):
 	return urlparse.urljoin(url, href)
