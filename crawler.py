@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import scanner
-from library import BASE_URL, TARGET_URL, make_vul_dict, make_timestamped_dir, generate_json
+from library import *
 
 ALL_RESULTS_OBJ = []
 
@@ -27,9 +27,11 @@ def aggregate_results():
 	for vuln_class, results_lst in aggregate.items():
 		output.append(make_vul_dict(vuln_class, results_lst))
 	# Write it to disk
-	dirname = make_timestamped_dir('json')
+	json_dir = make_timestamped_dir('json')
+	exploit_dir = make_timestamped_dir()
 	for dct in output:
-		generate_json(dirname, dct)
+		generate_json(json_dir, dct)
+		generate_exploits(exploit_dir, dct)
 	return output
 
 def pass_to_scanner(link, soup):
