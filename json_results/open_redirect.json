@@ -1,0 +1,32 @@
+{
+  "class": "Open Redirect", 
+  "results": {
+    "http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080": [
+      {
+        "endpoint": "/princess.php", 
+        "params": {
+          "target": "http://status.github.com/messages"
+        }, 
+        "method": "GET"
+      }
+    ],
+    "http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081": [
+      {
+        "endpoint": "/secretclub.php",
+        "params": {
+          "page": "drinks#http://status.github.com/messages"
+        },
+        "method": "GET"
+      }
+    ],
+    "http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8082": [
+      {
+        "endpoint": "/escape",
+        "params": {
+          "target": "http://status.github.com/messages"
+        },
+        "method": "GET"
+      }
+    ]
+  }
+}
