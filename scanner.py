@@ -13,7 +13,7 @@ from crawler import create_full_link
 
 # Global variables. Configure COOKIE if necessary.
 # Global list of injection objects is used to prevent duplicate attacks on same endpoint
-COOKIE = ""
+COOKIES = {}
 GET_INJECTION_OBJECTS = []
 POST_INJECTION_OBJECTS = []
 
