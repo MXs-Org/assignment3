@@ -1,0 +1,36 @@
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/index.txt
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/index.phps
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/secretclub.php
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/secretclub.php?page=science
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/secretclub.php?page=entertainment
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8081/secretclub.php?page=drinks
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[]

