@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import sql_injection_module
+import directory_traversal_module
 from crawler import create_full_link
 
 # Global variables. Configure COOKIE if necessary.
@@ -55,7 +56,7 @@ def extract_get_fields(link, soup):
         output.append(injection_obj)
   return output
 
-def extract_injection_points(link, soup):  
+def extract_injection_points(link, soup):
   post_urls = extract_post_fields(link, soup)
   get_urls = extract_get_fields(link, soup)
   post_urls.extend(get_urls)
@@ -71,4 +72,5 @@ def scan(link, soup):
   injection_obj_lst = extract_injection_points(link, soup)
   print("[*] Testing endpoint {}".format(link))
   sql_results = sql_injection_module.run(injection_obj_lst)
+  directory_traversal_module.run(injection_obj_lst)
   return make_json_results([sql_results])
