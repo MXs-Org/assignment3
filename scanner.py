@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import sql_injection_module
 import directory_traversal_module
 import open_redirect_module
+import command_injection_module
 from crawler import create_full_link
 
 # Global variables. Configure COOKIES if necessary.
@@ -74,8 +75,9 @@ def scan(link, soup):
   print("[*] Testing endpoint {}".format(link))
   sql_results = ("SQL Injection", sql_injection_module.run(injection_obj_lst))
   dir_trav_results = ("Directory Traversal", directory_traversal_module.run(injection_obj_lst))
-  open_redirect_results = ("Open Redirect" ,open_redirect_module.run(injection_obj_lst))
+  open_redirect_results = ("Open Redirect", open_redirect_module.run(injection_obj_lst))
+  command_injection_results = ("Command Injection", command_injection_module.run(injection_obj_lst))
   # Sample sql_results object:
   # ('SQL Injection', [{'endpoint': '/sqli/sqli.php', 
   # 'params': {u'username': "'-'"}, 'method': 'POST'}])
-  return [res for res in [sql_results, dir_trav_results, open_redirect_results] if res[1]]
+  return [res for res in [sql_results, dir_trav_results, open_redirect_results, command_injection_results] if res[1]]
