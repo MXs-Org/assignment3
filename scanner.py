@@ -11,9 +11,9 @@ import directory_traversal_module
 import open_redirect_module
 from crawler import create_full_link
 
-# Global variables. Configure COOKIE if necessary.
+# Global variables. Configure COOKIES if necessary.
 # Global list of injection objects is used to prevent duplicate attacks on same endpoint
-COOKIE = ""
+COOKIES = {}
 GET_INJECTION_OBJECTS = []
 POST_INJECTION_OBJECTS = []
 
@@ -34,7 +34,7 @@ def extract_post_fields(link, soup):
         if child.get('type') in ('text', 'hidden', 'password', 'submit', 'image'):
             # Extract the <input> name attribute
             params.append(child['name'])
-        injection_obj = ('POST', post_url, params, COOKIE)
+        injection_obj = ('POST', post_url, params, COOKIES)
         if injection_obj not in POST_INJECTION_OBJECTS:
           if injection_obj not in output:
             output.append(injection_obj)
@@ -51,7 +51,7 @@ def extract_get_fields(link, soup):
       # Create full link then strip off the query params
       full_link = create_full_link(a_element['href'], link)
       full_link = full_link[:full_link.index("?")]
-      injection_obj = ('GET', full_link, params, COOKIE)
+      injection_obj = ('GET', full_link, params, COOKIES)
       if injection_obj not in GET_INJECTION_OBJECTS:
         GET_INJECTION_OBJECTS.append(injection_obj)
         output.append(injection_obj)
