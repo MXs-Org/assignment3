@@ -27,12 +27,12 @@ def inject_payloads(injection_obj, payloads):
   # for each param, try all payloads
   for param_idx in range(len(params)):
     for payload in payloads:
-      print("Trying {} request {} with {} as param {}".format(method, link, payload, params[param_idx]))
+      # print("Trying {} request {} with {} as param {}".format(method, link, payload, params[param_idx]))
       response = library.make_request(injection_obj, payload, param_idx)
       is_exploitable = contains_passwd(response)
-      print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))
 
       if is_exploitable:
+        print("Exploitable with payload {}: {}\n".format(payload, is_exploitable))        
         return library.make_results_obj(injection_obj, payload)
 
   return None
