@@ -22,6 +22,10 @@ BASE_URL = "http://localhost:8888" if DEBUG else "http://target.com"
 # COOKIES = {}
 
 TEMPLATE_PLACEHOLDER_GET_REQ_URL = "<REPLACE_WITH_GET_URL>"
+TEMPLATE_PLACEHOLDER_GET_REQ_PARAMS = "<REPLACE_WITH_GET_PARAMS>"
+TEMPLATE_PLACEHOLDER_GET_REQ_TMP = "<REPLACE_WITH_EXPLOIT_FILENAME>"
+TEMPLATE_PLACEHOLDER_GET_REQ_COOKIES = "<REPLACE_WITH_GET_COOKIES>"
+
 TEMPLATE_PLACEHOLDER_POST_REQ_URL = "<REPLACE_WITH_POST_URL>"
 TEMPLATE_PLACEHOLDER_POST_REQ_PARAMS = "<REPLACE_WITH_POST_PARAMS>"
 TEMPLATE_PLACEHOLDER_POST_REQ_TMP = "<REPLACE_WITH_EXPLOIT_FILENAME>"
@@ -107,13 +111,23 @@ def generate_get_exploit_python(dirname, vul_class, pair_idx, endpoint, params):
 
   # form url for exploit - note shldn't encode the url (use as is)
   exploit_url = BASE_URL + endpoint + '?' + "&".join("%s=%s" % (k,v) for k,v in params.items())
+  exploit_cookies = str(COOKIES)
 
   # copy and replace placeholder in template
   shutil.copy2('exploit_templates/get_req.py', exploit_filename_with_dir)
 
+  # replace the placeholders - might want to refactor this shit
   file = fileinput.FileInput(exploit_filename_with_dir, inplace=True)
   for line in file:
-    print(line.replace(TEMPLATE_PLACEHOLDER_GET_REQ_URL, exploit_url), end='')
+    if TEMPLATE_PLACEHOLDER_GET_REQ_URL in line:
+      print(line.replace(TEMPLATE_PLACEHOLDER_GET_REQ_URL, exploit_url), end='')
+    elif TEMPLATE_PLACEHOLDER_GET_REQ_TMP in line:
+      print(line.replace(TEMPLATE_PLACEHOLDER_GET_REQ_TMP, exploit_filename), end='')
+    elif TEMPLATE_PLACEHOLDER_GET_REQ_COOKIES in line:
+      print(line.replace(TEMPLATE_PLACEHOLDER_GET_REQ_COOKIES, exploit_cookies), end='')
+    else:
+      print(line, end='')
+
   return exploit_filename
 
 def generate_post_exploit_python(dirname, vul_class, pair_idx, endpoint, params):
