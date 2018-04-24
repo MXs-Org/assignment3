@@ -91,6 +91,9 @@ def inject_payload(injection_obj, payload, baseline_lst):
   # if link == 'http://localhost:8888/openredirect/openredirect.php':
   #   import pdb; pdb.set_trace()
   res = make_request(injection_obj, payload)
+  # Discard if res is not 200 (filter server side problems)
+  if res.status_code != 200:
+    return None
   # Checks if the baseline_lst contains only a "", which means No Baseline
   if baseline_lst[0]:
     # res.content must be different from ALL the baseline
