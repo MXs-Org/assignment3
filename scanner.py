@@ -73,4 +73,5 @@ def scan(link, soup):
   print("[*] Testing endpoint {}".format(link))
   sql_results = sql_injection_module.run(injection_obj_lst)
   dir_trav_results = directory_traversal_module.run(injection_obj_lst)
+  open_redirect_results = open_redirect_module.run(injection_obj_lst)
   return make_json_results([sql_results])
