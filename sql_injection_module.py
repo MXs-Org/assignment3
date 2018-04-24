@@ -45,37 +45,56 @@ def extract_post_fields(link, soup):
   return post_dct
 
 def find_baseline(injection_obj):
-  # Follow a simple flowchart to see if a baseline file can be determined
-  # Returns the baseline_file. "" if baseline does not exist
+  """Attempts to detect if there is a baseline present for the endpoint. Returns
+  a list of possible baseline pages (aka error pages), or [""] if the <input> is
+  echoed back in the response
 
+  Args:
+    injection_obj: tuple of (method, link, params, cookie)
+
+  Returns:
+    baseline_lst: a [String] of what the baseline response looks like. Returns [""]
+    if no reasonable baseline can be determined i.e. <input> is echoed back to user
+  """
   method, link, params, cookie = injection_obj
-  if link == "http://192.168.56.101/sqli/example5.php":
-    import pdb; pdb.set_trace()
+  # Test if response is different for Int and String
+  # Int chosen such that it should be beyond the total number of rows in a DB
+  # String chosen such that it should not reasonably be in present in DB
+  # Mixed is for requests that start with an Int but contains characters
+  int_payload = '111111'
+  str_payload = 'quickbrownfoxlazydog'
+  mixed_payload = int_payload + str_payload
+  # Get the responses
+  int_res = make_request(injection_obj, int_payload).content
+  str_res = make_request(injection_obj, str_payload).content
+  mixed_res = make_request(injection_obj, mixed_payload).content
+  if int_res == str_res:
+    # Means that error message is constant for both Int and String
+    # Accept that response as a baseline
+    return [int_res]
+  if int_res != str_res:
+    # Server handles Int and String inputs differently 
+    if int_payload in int_res or str_payload in str_res:
+      # Check if <input> is echoed back to the user
+      return [""]
+    else:
+      if int_res == mixed_res:
+        # Server parses the int and mixed the same way
+        return [int_res, str_res]
+      else:
+        return [int_res, str_res, mixed_res]
+  return [""]
 
-  # Send a request with long garbage string (lower the chances that the page 
-  # originally contains our POST data)
-  res1 = make_request(injection_obj, 'b1946ac92492d2347c6235b4d2611184').content
-  res2 = make_request(injection_obj, '91fc14ad02afd60985bb8165bda320a6').content
-  # If the input data does not affect the response, it means that whatever 
-  # response we get is the baseline
-  if res1 == res2:
-    return res1
-  else:
-    # How to handle cases where they say "<input> cannot be found"
-    # i.e. <input> is echoed back to the user
-    if 'b1946ac92492d2347c6235b4d2611184' in res1:
-      return ""
-
-def inject_payload(injection_obj, payload, baseline):
+def inject_payload(injection_obj, payload, baseline_lst):
   # import pdb; pdb.set_trace()
   method, link, params, cookie = injection_obj
   # if link == 'http://localhost:8888/openredirect/openredirect.php':
   #   import pdb; pdb.set_trace()
   res = make_request(injection_obj, payload)
-  if payload == "'-'\n" and link == "http://192.168.56.101/sqli/example5.php":
-    import pdb; pdb.set_trace()
-  if baseline:
-    if res.content != baseline:
+  # Checks if the baseline_lst contains only a "", which means No Baseline
+  if baseline_lst[0]:
+    # res.content must be different from ALL the baseline
+    if all([res.content != baseline for baseline in baseline_lst]):
       print("[*] Working payload found!")
       print(injection_obj, payload)
       return make_results_obj(injection_obj, payload)
@@ -98,7 +117,7 @@ def iterate_payloads(injection_obj_lst):
     method, link, params, cookie = injection_obj
     for param in params:
       baseline = find_baseline(injection_obj)
-      payloads = open('payloads/Auth_Bypass.txt').readlines()
+      payloads = open('payloads/sql_injection_payloads.txt').read().splitlines()
       for payload in payloads:
         result = inject_payload(injection_obj, payload, baseline)
         if result:
