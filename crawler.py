@@ -51,7 +51,7 @@ def crawler(init_url):
 	seen_links = {init_url}
 	while all_links:
 		url = all_links.pop()
-		page = requests.get(url)
+		page = requests.get(url, cookies=COOKIES)
 		soup = BeautifulSoup(page.content, 'html.parser')
 		# Scan the current URL for vulnerabilities
 		ALL_RESULTS_OBJ.extend(pass_to_scanner(url, soup))
