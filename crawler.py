@@ -10,7 +10,27 @@ import requests
 from bs4 import BeautifulSoup
 
 import scanner
-from library import BASE_URL, TARGET_URL
+from library import BASE_URL, TARGET_URL, make_vul_dict, make_timestamped_dir, generate_json
+
+ALL_RESULTS_OBJ = []
+
+def aggregate_results():
+	# Returns the nice JSON for submission
+	aggregate = {}
+	output = []
+	# Aggregate the results_obj first
+	for (vuln_class, results_obj) in ALL_RESULTS_OBJ:
+		if vuln_class not in aggregate:
+			aggregate[vuln_class] = []
+		aggregate[vuln_class].extend(results_obj)
+	# Make the final output
+	for vuln_class, results_lst in aggregate.items():
+		output.append(make_vul_dict(vuln_class, results_lst))
+	# Write it to disk
+	dirname = make_timestamped_dir('json')
+	for dct in output:
+		generate_json(dirname, dct)
+	return output
 
 def pass_to_scanner(link, soup):
 	# Final implementation is to pass URL to scanner once a link is found. 
@@ -32,7 +52,7 @@ def crawler(init_url):
 		page = requests.get(url)
 		soup = BeautifulSoup(page.content, 'html.parser')
 		# Scan the current URL for vulnerabilities
-		pass_to_scanner(url, soup)
+		ALL_RESULTS_OBJ.extend(pass_to_scanner(url, soup))
 		# Find more links from the current URL
 		for a_element in soup.find_all('a', href=True):
 			link = create_full_link(a_element['href'], url)
@@ -46,3 +66,4 @@ def crawler(init_url):
 
 if __name__ == "__main__":
 	crawler(TARGET_URL)
+	print(aggregate_results())
