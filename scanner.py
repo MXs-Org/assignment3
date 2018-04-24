@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 import sql_injection_module
 import directory_traversal_module
+import open_redirect_module
 from crawler import create_full_link
 
 # Global variables. Configure COOKIE if necessary.
@@ -74,4 +75,3 @@ def scan(link, soup):
   sql_results = sql_injection_module.run(injection_obj_lst)
   dir_trav_results = directory_traversal_module.run(injection_obj_lst)
   open_redirect_results = open_redirect_module.run(injection_obj_lst)
-  return make_json_results([sql_results])
