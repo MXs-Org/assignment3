@@ -9,7 +9,7 @@ import datetime
 import shutil
 import fileinput
 import json
-from scanner import COOKIES
+# from scanner import COOKIES
 
 import requests
 
@@ -19,7 +19,7 @@ DEBUG = True
 # Note: DON'T end with a TRAILING '/'
 TARGET_URL = "http://localhost:8888"
 BASE_URL = "http://localhost:8888" if DEBUG else "http://target.com"
-# COOKIES = {}
+COOKIES = {}
 
 TEMPLATE_PLACEHOLDER_GET_REQ_URL = "<REPLACE_WITH_GET_URL>"
 TEMPLATE_PLACEHOLDER_GET_REQ_PARAMS = "<REPLACE_WITH_GET_PARAMS>"
@@ -94,7 +94,6 @@ def generate_exploits(dirname, vul_dict):
 
 def generate_json(dirname, vul_dict):
   vul_class = vul_dict['class']
-  print(vul_class)
   with open(dirname + '/' + vul_class + '.json', 'w+') as fp:
     json.dump(vul_dict, fp, indent=2)
 
